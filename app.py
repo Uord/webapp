@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello():
-    return 'Touched for the very first time.'
+    return 'Siemano, Ola!'
 
 
 @app.route('/user-agent')
