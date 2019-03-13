@@ -18,8 +18,7 @@ def method():
 @app.route('/show_data', methods = ['POST'])
 def show_data():
     if request.headers['Content-Type'] == 'application/json':
-         app.config['JSON_AS_ASCII'] = False
-        data = request.get_json(encoding='utf-8')
+        app.config['JSON_AS_ASCII'] = False
         return data
 
 if __name__ == '__main__':
