@@ -17,8 +17,9 @@ def method():
 
 @app.route('/show_data', methods = ['POST'])
 def show_data():
-    data = request.get_json()
-    return str(data)
+    if request.headers['Content-Type'] == 'application/json':
+        data = request.get_json()
+        return data
 
 if __name__ == '__main__':
     app.run(debug=False)
