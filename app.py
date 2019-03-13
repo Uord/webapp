@@ -1,6 +1,8 @@
 from flask import Flask
 from flask import request
 
+
+
 app = Flask(__name__)
 
 
@@ -13,6 +15,10 @@ def hello():
 def method():
     return f'{request.method}'
 
+@app.route('/show_data', methods = ['POST'])
+def show_data():
+    data = request.get_json()
+    return str(data)
 
 if __name__ == '__main__':
     app.run(debug=False)
