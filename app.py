@@ -9,9 +9,9 @@ app = Flask(__name__)
 def hello():
     return 'Hello, World!'
 
-@app.route('/method')
+@app.route('/method', methods = ['POST', 'PUT' 'GET'])
 def method():
-    return f'{request.headers}'
+    return f'{request.methods}'
 
 
 if __name__ == '__main__':
