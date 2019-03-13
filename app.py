@@ -21,7 +21,8 @@ def method():
 def show_data():
     if request.headers['Content-Type'] == 'application/json':
         data = request.get_json()
-        return str(data)
+        
+        return json.dumps(data).encode('utf8')
 
 if __name__ == '__main__':
     app.run(debug=False)
