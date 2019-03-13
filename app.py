@@ -23,7 +23,7 @@ def print_name():
         data = request.get_json()
         data2 = json.dumps(data).encode('utf8')
         data3 = json.loads(data2).encode('utf8')
-        return f'Na imię mu {data3["name"]}, a nazwisko jego {data3["surename"]}'
+        return f'Na imię mu {data2["name"]}, a nazwisko jego {data2["surename"]}'
 
 if __name__ == '__main__':
     app.run(debug=False)
