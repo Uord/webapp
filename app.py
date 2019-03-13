@@ -19,6 +19,7 @@ def method():
 def show_data():
     if request.headers['Content-Type'] == 'application/json':
         app.config['JSON_AS_ASCII'] = False
+        data = request.get_json()
         return data
 
 if __name__ == '__main__':
