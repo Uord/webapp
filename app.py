@@ -22,7 +22,7 @@ def show_data():
     if request.headers['Content-Type'] == 'application/json':
         ##data -json.dumps(settings.CONSTANT_TUPLE, encoding='utf-8', ensure_ascii=False)
         data = request.get_json()
-        data2 = data.encode('utf-8')
+        data2 = json.dumps(data,encoding='utf-8')
         return data2
 
 if __name__ == '__main__':
