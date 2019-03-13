@@ -11,7 +11,7 @@ def hello():
 
 @app.route('/method')
 def method():
-    return f'{request.methods}'
+    return f'{request.method}'
 
 
 if __name__ == '__main__':
