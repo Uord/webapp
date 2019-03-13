@@ -25,7 +25,7 @@ def print_name():
                 data = request.get_json()
                 data2 = json.dumps(data).encode('utf8')
                 data3 = json.loads(data2)
-                return f'{data}'
+                return f'{data3}'
 
 
 @app.route('/counter')
