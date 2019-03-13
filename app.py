@@ -3,6 +3,7 @@ from flask import request
 import json
 
 app = Flask(__name__)
+app.counter = 0
 
 @app.route('/')
 def hello():
@@ -24,7 +25,13 @@ def print_name():
                 data = request.get_json()
                 data2 = json.dumps(data).encode('utf8')
                 data3 = json.loads(data2)
-                return f'{data3}'
+                return f'{data}'
+
+
+@app.route('/counter')
+def counter():
+        app.counter += 1
+        return str(app.counter)
 
 if __name__ == '__main__':
         app.run(debug=False)
