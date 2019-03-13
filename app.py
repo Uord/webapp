@@ -22,7 +22,8 @@ def show_data():
 def print_name():
         data = request.get_json()
         data2 = json.dumps(data).encode('utf8')
-        return f'Na imię mu {data2[1]}, a nazwisko jego {data2[2]}'
+        data3 = json.loads(data2)
+        return f'Na imię mu {data3.get('name')}, a nazwisko jego {data3.get('surename')}'
 
 if __name__ == '__main__':
     app.run(debug=False)
