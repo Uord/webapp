@@ -5,6 +5,7 @@ from functools import wraps
 
 app = Flask(__name__)
 app.counter = 0
+app.secret_key = bytes.fromhex('dfba670ebc21410076bb5941140e789ac6342e09c18da920')
 
 
 
@@ -43,7 +44,7 @@ def login():
         return redirect(url_for('hello'))
 
 def requires_user_session(func):
-        wraps(func)
+        @wraps(func)
         def wrapper(*args, **kwargs):
                 if not session.get('username'):
                         return redirect(url_for('login'))
