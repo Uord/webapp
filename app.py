@@ -1,8 +1,7 @@
 from flask import Flask
-from flask import request, redirect, session, Response, url_for, render_template
+from flask import request, redirect, session, Response, url_for, render_template, jsonify
 import json
 from functools import wraps
-
 app = Flask(__name__)
 app.counter = 0
 
@@ -10,7 +9,7 @@ app.counter = 0
 
 
 @app.route('/')
-def hello():
+def start():
         return 'Hello, World!'
 
 
@@ -53,11 +52,8 @@ def requires_user_session(func):
         return wrapper
 
 @app.route('/hello')
-@requires_user_session
-def hellol():
-        return render_template('greeting.html', name=session['username'])
-
-
+def hello():
+        return 'Hello, World!'
 
 
 
