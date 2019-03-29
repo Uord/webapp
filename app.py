@@ -7,29 +7,65 @@ app.counter = 0
 
 
 
-
 @app.route('/')
-def start():
+def root():
         return 'Hello, World!'
 
 
+def check_auth(username, password):
+        """This function is called to check if a username password combination is
+        valid."""
+        return username == 'TRAIN' and password == 'TuN3L'
 
 
-@app.route('/login', methods = ['GET','POST'])
+def please_authenticate():
+        """Sends a 401 response that enables basic auth"""
+        return Response('Could not verify your access level for that URL.\n'
+                        'You have to login with proper credentials', 401,
+                        {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
+
+def requires_basic_auth(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+                auth = request.authorization
+                if not auth or not check_auth(auth.username, auth.password):
+                        return please_authenticate()
+                return func(*args, **kwargs)
+
+        return wrapper
+
+
+@app.route('/login', methods=['GET', 'POST'])
+@requires_basic_auth
 def login():
-        auth = request.authorization
-        username = auth.username
-        password = auth.password
-        if username == 'TRAIN' and password == 'TuN3L':
-                session['username'] = request.authorization.username
-                return redirect("https://apkalevelup.herokuapp.com/hello")
-        else:
-                return  redirect("https://apkalevelup.herokuapp.com/")
+        session['username'] = request.authorization.username
+        return redirect(url_for('hello'))
+
+
+def requires_user_session(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+                if not session.get('username'):
+                        return redirect(url_for('login'))
+                return func(*args, **kwargs)
+
+        return wrapper
 
 
 @app.route('/hello')
+@requires_user_session
 def hello():
-        return 'Hello, World!'
+        return render_template('greeting.html', name=session['username'])
+
+
+@app.route('/logout', methods=['GET', 'POST'])
+@requires_user_session
+def logout():
+        if request.method == 'GET':
+                return redirect(url_for('root'))
+        del session['username']
+        return redirect(url_for('root'))
 
 
 
