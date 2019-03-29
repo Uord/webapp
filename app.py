@@ -5,7 +5,7 @@ from functools import wraps
 
 app = Flask(__name__)
 app.counter = 0
-app.secret_key = bytes.fromhex('dfba670ebc21410076bb5941140e789ac6342e09c18da920')
+
 
 
 
@@ -37,7 +37,7 @@ def requires_basic_auth(func):
 
         return wrapper
 
-@app.route('/login', methods = ['POST'])
+@app.route('/login', methods = ['GET','POST'])
 @requires_basic_auth
 def login():
         session['username'] = request.authorization.username
