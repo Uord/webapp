@@ -13,20 +13,7 @@ def start():
         return 'Hello, World!'
 
 
-def check_auth(username, password):
-        return username == 'TRAIN' and password == 'TuN3L'
 
-
-
-
-def requires_basic_auth(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-                if not auth or not check_auth(auth.username, auth.password):
-                        return please_authenticate()
-                return func(*args, **kwargs)
-
-        return wrapper
 
 @app.route('/login', methods = ['GET','POST'])
 def login():
