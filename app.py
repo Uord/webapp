@@ -1,7 +1,11 @@
-from flask import Flask
-from flask import request, redirect, session, Response, url_for, render_template, jsonify
-import json
 from functools import wraps
+from uuid import uuid4, UUID
+
+from flask import Flask, request, Response, session, redirect, url_for, jsonify, render_template
+
+import json
+
+
 app = Flask(__name__)
 app.counter = 0
 
