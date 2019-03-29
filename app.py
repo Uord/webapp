@@ -40,7 +40,7 @@ def requires_basic_auth(func):
 @requires_basic_auth
 def login():
         session['username'] = request.authorization.username
-        return redirect("https://apkalevelup.herokuapp.com/hello", code=302)
+        return redirect("https://apkalevelup.herokuapp.com/hello", code=200)
 
 def requires_user_session(func):
         @wraps(func)
