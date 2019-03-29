@@ -22,9 +22,9 @@ def login():
         password = auth.password
         if username == 'TRAIN' and password == 'TuN3L':
                 session['username'] = request.authorization.username
-                return redirect("https://apkalevelup.herokuapp.com/hello", code=200)
+                return redirect("https://apkalevelup.herokuapp.com/hello")
         else:
-                return  redirect("https://apkalevelup.herokuapp.com/", code=200)
+                return  redirect("https://apkalevelup.herokuapp.com/")
 
 
 @app.route('/hello')
