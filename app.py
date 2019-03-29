@@ -14,22 +14,14 @@ def start():
 
 
 def check_auth(username, password):
-        """This function is called to check if a username password combination is
-        valid."""
         return username == 'TRAIN' and password == 'TuN3L'
 
 
-def please_authenticate():
-        """Sends a 401 response that enables basic auth"""
-        return Response('Could not verify your access level for that URL.\n'
-                        'You have to login with proper credentials', 401,
-                        {'WWW-Authenticate': 'Basic realm="Login Required"'})
 
 
 def requires_basic_auth(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-                auth = request.authorization
                 if not auth or not check_auth(auth.username, auth.password):
                         return please_authenticate()
                 return func(*args, **kwargs)
@@ -37,19 +29,16 @@ def requires_basic_auth(func):
         return wrapper
 
 @app.route('/login', methods = ['GET','POST'])
-@requires_basic_auth
 def login():
-        session['username'] = request.authorization.username
-        return redirect("https://apkalevelup.herokuapp.com/hello", code=200)
+        auth = request.authorization
+        username = auth.username
+        password = auth.password
+        if username == 'TRAIN' and password == 'TuN3L':
+                session['username'] = request.authorization.username
+                return redirect("https://apkalevelup.herokuapp.com/hello", code=200)
+        else:
+                return  redirect("https://apkalevelup.herokuapp.com/", code=200)
 
-def requires_user_session(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-                if not session.get('username'):
-                        return redirect(url_for('login'))
-                return func(*args, **kwargs)
-
-        return wrapper
 
 @app.route('/hello')
 def hello():
