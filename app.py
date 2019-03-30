@@ -14,7 +14,7 @@ app.counter = 0
 
 app.config['BASIC_AUTH_USERNAME'] = 'TRAIN'
 app.config['BASIC_AUTH_PASSWORD'] = 'TuN3L'
-app.config['SECRET_KEY'] = 'VerySecretRandomString'
+app.config['SECRET_KEY'] = 'xwsd23rdsa4'
 basic_auth = BasicAuth(app)
 
 
@@ -27,8 +27,8 @@ def root():
 @app.route('/login', methods=['GET', 'POST'])
 @basic_auth.required
 def login():
-        session['username'] = request.authorization.username
-        return redirect(url_for('hello'))
+        session['logged_in'] = True
+        return redirect('/hello')
 
 
 def requires_user_session(func):
@@ -42,9 +42,10 @@ def requires_user_session(func):
 
 
 @app.route('/hello')
-@requires_user_session
 def hello():
-        return render_template('pozdro.html', name=session['username'])
+        if not session.get('logged_in'):
+                return redirect('/login')
+        return render_template('pozdro.html', name=app.config['BASIC_AUTH_USERNAME'])
 
 
 @app.route('/logout', methods=['GET', 'POST'])
@@ -52,7 +53,7 @@ def hello():
 def logout():
         if request.method == 'GET':
                 return redirect(url_for('root'))
-        del session['username']
+        del session['logged_in']
         return redirect(url_for('root'))
 
 
