@@ -94,8 +94,16 @@ def zadanie6w3(trainId):
     if not session.get('logged_in', False):
         abort(401)
     if request.method == 'DELETE':
-        mainDict.pop(trainId)
-        return '', 204
+        if len(mainDict) > 0:
+            if trainId in mainDict:
+                print(trainId)
+                print(mainDict.get(trainId))
+                print('pop')
+                mainDict.pop(trainId)
+                print(mainDict.get(trainId))
+                return Response(status=200)
+            return Response(status=404)
+        return Response(status=404)
     if request.method == 'GET':
         if request.args.get('format') == 'json':
             print('id json')
