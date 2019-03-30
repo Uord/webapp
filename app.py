@@ -2,13 +2,20 @@ from functools import wraps
 from uuid import uuid4, UUID
 
 from flask import Flask, request, Response, session, redirect, url_for, jsonify, render_template
-
+from flask_basicauth import BasicAuth
+from dicttoxml import dicttoxml
 import json
+import datetime
 
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='')
 app.counter = 0
 
+
+app.config['BASIC_AUTH_USERNAME'] = 'TRAIN'
+app.config['BASIC_AUTH_PASSWORD'] = 'TuN3L'
+app.config['SECRET_KEY'] = 'VerySecretRandomString'
+basic_auth = BasicAuth(app)
 
 
 @app.route('/')
@@ -16,32 +23,9 @@ def root():
         return 'Hello, World!'
 
 
-def check_auth(username, password):
-        """This function is called to check if a username password combination is
-        valid."""
-        return username == 'TRAIN' and password == 'TuN3L'
-
-
-def please_authenticate():
-        """Sends a 401 response that enables basic auth"""
-        return Response('Could not verify your access level for that URL.\n'
-                        'You have to login with proper credentials', 401,
-                        {'WWW-Authenticate': 'Basic realm="Login Required"'})
-
-
-def requires_basic_auth(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-                auth = request.authorization
-                if not auth or not check_auth(auth.username, auth.password):
-                        return please_authenticate()
-                return func(*args, **kwargs)
-
-        return wrapper
-
 
 @app.route('/login', methods=['GET', 'POST'])
-@requires_basic_auth
+@basic_auth.required
 def login():
         session['username'] = request.authorization.username
         return redirect(url_for('hello'))
