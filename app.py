@@ -19,9 +19,7 @@ basic_auth = BasicAuth(app)
 mainDict = dict()
 empList = []
 
-@app.route('/')
-def root():
-        return 'Hello, World!'
+
 @app.route('/',methods=['GET'])
 def zadanie1w3():
         return Response(status=200)
