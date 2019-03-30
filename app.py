@@ -31,30 +31,20 @@ def login():
         return redirect('/hello')
 
 
-def requires_user_session(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-                if not session.get('username'):
-                        return redirect(url_for('login'))
-                return func(*args, **kwargs)
-
-        return wrapper
-
 
 @app.route('/hello')
 def hello():
-        if not session.get('logged_in'):
+        if not session.get('logged_in', False):
                 return redirect('/login')
-        return render_template('pozdro.html', name=app.config['BASIC_AUTH_USERNAME'])
+        return render_template('pozdro.html', name='TRAIN')
 
 
 @app.route('/logout', methods=['GET', 'POST'])
-@requires_user_session
 def logout():
         if request.method == 'GET':
-                return redirect(url_for('root'))
+                return redirect('/root')
         del session['logged_in']
-        return redirect(url_for('root'))
+        return redirect('/login')
 
 
 
