@@ -8,7 +8,7 @@ import json
 import datetime
 
 
-app = Flask(__name__, template_folder='')
+app = Flask(__name__)
 app.counter = 0
 
 
@@ -19,6 +19,9 @@ basic_auth = BasicAuth(app)
 mainDict = dict()
 empList = []
 
+@app.route('/')
+def hel():
+        return 'Hello, World!'
 
 @app.route('/',methods=['GET'])
 def zadanie1w3():
@@ -80,7 +83,7 @@ def zadanie6w3(id):
         if request.method == 'GET':
                 if request.args.get('format') == 'json':
                         print('id json')
-                        rint(mainDict)
+                        print(mainDict)
                         print(json.dumps(mainDict.get(id)))
                         return json.dumps(mainDict.get(id))
                 return dicttoxml(mainDict.get(id))
@@ -133,4 +136,4 @@ def counter():
         return str(app.counter)
 
 if __name__ == '__main__':
-        app.run(debug=False)
+        app.run(debug=True)
