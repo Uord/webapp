@@ -1,7 +1,7 @@
 from functools import wraps
 from uuid import uuid4, UUID
 
-from flask import Flask, request, Response, session, redirect, url_for, jsonify, render_template
+from flask import Flask, request, session, redirect, abort, Response, render_template, url_for, jsonify
 from flask_basicauth import BasicAuth
 from dicttoxml import dicttoxml
 import json
@@ -43,7 +43,7 @@ def zadanie3w3():
 def zadanie4w3():
         if not session.get('logged_in', False):
                 return redirect('/login')
-        return render_template('index.html', user='TRAIN')
+        return render_template('podro.html', name='TRAIN')
 
 @app.route('/trains', methods=['POST','GET'])
 def zadanie5w3():
@@ -65,7 +65,7 @@ def zadanie5w3():
         
         if request.method == 'GET':
                 if request.args.get('format') == 'json':
-                return json.dumps(mainDict)
+                        return json.dumps(mainDict)
                 return dicttoxml(mainDict)
 
 @app.route('/trains/<id>',methods = ['GET','DELETE'])
@@ -74,15 +74,15 @@ def zadanie6w3(id):
                 abort(401)
         if request.method == 'DELETE':
                 if len(mainDict) > 0:
-                print(id)
-                print(mainDict.get(id))
-                mainDict.pop(id)
+                        print(id)
+                        print(mainDict.get(id))
+                        mainDict.pop(id)
         if request.method == 'GET':
                 if request.args.get('format') == 'json':
-                print('id json')
-                print(mainDict)
-                print(json.dumps(mainDict.get(id)))
-                return json.dumps(mainDict.get(id))
+                        print('id json')
+                        rint(mainDict)
+                        print(json.dumps(mainDict.get(id)))
+                        return json.dumps(mainDict.get(id))
                 return dicttoxml(mainDict.get(id))
 
 
