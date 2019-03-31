@@ -8,6 +8,7 @@ app = Flask(__name__, template_folder='')
 i = 0
 mainDict = dict()
 empList = []
+app.trains = {}
 
 app.config['BASIC_AUTH_USERNAME'] = 'TRAIN'
 app.config['BASIC_AUTH_PASSWORD'] = 'TuN3L'
@@ -94,14 +95,16 @@ def zadanie6w3(trainId):
     if not session.get('logged_in', False):
         abort(401)
     if request.method == 'DELETE':
-        if len(mainDict) > 0:
-            if trainId in mainDict:
-                print(trainId)
-                print(mainDict.get(trainId))
-                print('pop')
-                mainDict.pop(trainId)
-                print(mainDict.get(trainId))
-                return Response(status=200)
+        if request.args.get('format') == 'json':
+            if len(mainDict) > 0:
+                if trainId in mainDict:
+                    print(trainId)
+                    print(mainDict.get(trainId))
+                    print('pop')
+                    mainDict.pop(trainId)
+                    print(mainDict.get(trainId))
+                    return Response(status=200)
+                return Response(status=404)
             return Response(status=404)
         return Response(status=404)
     if request.method == 'GET':
