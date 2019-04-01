@@ -1,6 +1,7 @@
 import sqlite3
 from flask import g, Flask
 import json
+import matplotlib
 
 app = Flask(__name__)
 
@@ -21,8 +22,11 @@ def close_connection(exception):
 @app.route('/tracks')
 def tracks_list():
     db = get_db()
-    data = db.execute('SELECT name FROM tracks').fetchall()
+    cursor = db.cursor()
+    data = cursor.execute('SELECT name FROM tracks').fetchall()
+    cursor.close()
     data = sorted(data)
+    data = list(matplotlib.cbook.flatten(data))
     return json.dumps(data).encode('utf8')
 
 if __name__ == '__main__':
