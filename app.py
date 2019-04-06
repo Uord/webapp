@@ -138,53 +138,6 @@ def post_track():
     data = db.execute('''SELECT * FROM tracks
                             WHERE trackid = (SELECT MAX(trackid)  FROM tracks)''').fetchone()
     return jsonify(data), 200
-    """ db = get_db()
-    new_track = request.get_json()
-
-    album_id = request.form['AlbumId']
-    media_type_id = request.form['MediaTypeId']
-    genre_id = request.form['GenreId']
-    name = request.form['Name']
-    composer = request.form['Composer']
-    milliseconds = request.form['Milliseconds']
-    bytess = request.form['Bytes']
-    price = request.form['UnitPrice']
-
-    if new_track == None:
-
-        if album_id is None:
-            raise InvalidUsage(f'missing "AlbumID" in request data')
-        if media_type_id is None:
-            raise InvalidUsage(f'missing "MediaTypeId" in request data')
-        if genre_id is None:
-            raise InvalidUsage(f'missing "GenreId" in request data')
-        if name is None:
-            raise InvalidUsage(f'missing "Name" in request data')
-        if composer is None:
-            raise InvalidUsage(f'missing "Composer" in request data')
-        if milliseconds is None:
-            raise InvalidUsage(f'missing "Milliseconds" in request data')
-        if bytess is None:
-            raise InvalidUsage(f'missing "Bytes" in request data')
-        if price is None:
-            raise InvalidUsage(f'missing "UnitPrice" in request data')
-    
-    else:
-        db.execute(
-            '''INSERT INTO tracks (name, albumid, mediatypeid, genreid, composer, milliseconds, bytes, unitprice) '
-            VALUES (?,?,?,?,?,?,?,?)''', (name, album_id, media_type_id, genre_id, composer, milliseconds, bytess, price))
-        db.commit()
-    
-
-        db.rollback()
-    
-    
-
-        db_track = db.execute(
-            '''SELECT * FROM tracks 
-            WHERE trackid = (SELECT MAX(trackid) FROM tracks)''').fetchone()
-
-        return jsonify(db_track), 200 """
 
 
 
