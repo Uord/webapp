@@ -5,6 +5,7 @@ from flask import (
     render_template,
     request,
     url_for,
+    jsonify
 )
 import sqlite3
 import json
@@ -33,9 +34,7 @@ def tracks_list():
     data2 = []
     for x in data:
         data2.append(x[0])
-    data2 = json.dumps(data2).encode('utf8')
-    headers = {'Content-type': 'application/json'}
-    return request.get(json = data2, headers = headers)
+    return jsonify(data2)
 
 
 if __name__ == '__main__':
