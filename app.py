@@ -106,14 +106,14 @@ def post_track():
     db = get_db()
     new_track = request.get_json()
 
-    album_id = request.form['album_id']
-    media_type_id = request.form['media_type_id']
-    genre_id = request.form['genre_id']
-    name = request.form['name']
-    composer = request.form['composer']
-    milliseconds = request.form['milliseconds']
-    bytess = request.form['bytes']
-    price = request.form['price']
+    album_id = request.form['AlbumID']
+    media_type_id = request.form['MediaTypeId']
+    genre_id = request.form['GenreId']
+    name = request.form['Name']
+    composer = request.form['Composer']
+    milliseconds = request.form['Milliseconds']
+    bytess = request.form['Bytes']
+    price = request.form['UnitPrice']
 
     if new_track == None:
 
@@ -154,4 +154,4 @@ def post_track():
 
 
 if __name__ == '__main__':
-        app.run(debug=False)
+        app.run(debug=True)
