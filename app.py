@@ -33,7 +33,7 @@ def tracks_list():
     data2 = []
     for x in data:
         data2.append(x[0])
-    return json.dumps(data2).encode('utf8')
+    return json.dumps(data2)
 
 if __name__ == '__main__':
         app.run(debug=False)
