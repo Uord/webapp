@@ -132,7 +132,7 @@ def post_track():
     try:
         db.execute(
             'INSERT INTO tracks (album_id, media_type_id,genre_id,name,composer,milliseconds,bytes,price) '
-            'VALUES (:album_id, :media_type_id,:media_type_id,:genre_id,:name,:composer, :milliseconds, :bytes, :price);',
+            'VALUES (:album_id,:media_type_id,:genre_id,:name,:composer, :milliseconds, :bytes, :price);',
             new_track
         )
         db.commit()
@@ -151,8 +151,13 @@ def post_track():
             raise error
     
 
+    db_track = db.execute(
+        'SELECT * FROM tracks '
+        'WHERE tracks.album_id = :album_id AND tracks.media_type_id = :media_type_id AND tracks.genre_id = :genre_id AND tracks.name = :name AND tracks.composer = :composer AND tracks.milliseconds = :milliseconds AND tracks.bytes = :bytes AND tracks.price = :price;',
+        new_track
+    ).fetchone()
 
-    return 'lol'
+    return jsonify(dict(db_track))
 
 
 
