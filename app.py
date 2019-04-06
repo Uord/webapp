@@ -33,7 +33,10 @@ def tracks_list():
     data2 = []
     for x in data:
         data2.append(x[0])
-    return json.dumps(data2)
+    data2 = json.dumps(data2).encode('utf8')
+    headers = {'Content-type': 'application/json'}
+    return request.get(json = data2, headers = headers)
+
 
 if __name__ == '__main__':
         app.run(debug=False)
