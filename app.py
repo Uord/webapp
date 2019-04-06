@@ -137,7 +137,7 @@ def post_track():
                     VALUES (?,?,?,?,?,?,?,?)''',(name, album_id, media_type_id, genre_id, composer, milliseconds, bytess, price))
     data = db.execute('''SELECT * FROM tracks
                             WHERE trackid = (SELECT MAX(trackid)  FROM tracks)''').fetchone()
-    return jsonify(data)
+    return jsonify(data), 200
     """ db = get_db()
     new_track = request.get_json()
 
