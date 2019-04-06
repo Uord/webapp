@@ -29,7 +29,7 @@ def close_connection(exception):
 @app.route('/tracks')
 def tracks_list():
     db = get_db()
-    data = db.execute('SELECT name FROM tracks').fetchall()
+    data = db.execute('SELECT name FROM tracks COLLATE NOCASE').fetchall()
     data = sorted(data)
     data2 = []
     for x in data:
