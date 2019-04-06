@@ -153,7 +153,7 @@ def post_track():
 
     db_track = db.execute(
         '''SELECT * FROM tracks 
-        WHERE trackid = (SELECT MAX(trackid) FROM tracks)''')
+        WHERE trackid = (SELECT MAX(trackid) FROM tracks)''').fetchone()
 
     return jsonify(dict(db_track)), 200
 
