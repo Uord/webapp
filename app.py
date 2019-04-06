@@ -30,7 +30,7 @@ def tracks_list():
     db = get_db()
     data = db.execute('SELECT name FROM tracks').fetchall()
     data = sorted(data)
-    return render_template('tracks.html', tracks=data)
+    return json.dumps(data).encode('utf8')
 
 if __name__ == '__main__':
         app.run(debug=False)
