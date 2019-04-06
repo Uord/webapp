@@ -18,6 +18,8 @@ def get_db():
     db = getattr(g, '_database', None)
     if db is None:
         db = g._database = sqlite3.connect(DATABASE)
+        db.execute('PRAGMA foreign_keys = 1')
+        db.row_factory = sqlite3.Row
     return db
 
 @app.teardown_appcontext
@@ -131,10 +133,8 @@ def post_track():
     
     try:
         db.execute(
-            'INSERT INTO tracks (albumid, MediaTypeId,GenreId,Name,composer,milliseconds,bytes,UnitPrice) '
-            'VALUES (:albumid,:MediaTypeId,:GenreId,:Name,:composer, :milliseconds, :bytes, :UnitPrice);',
-            new_track
-        )
+            '''INSERT INTO tracks (name, albumid, mediatypeid, genreid, composer, milliseconds, bytes, unitprice) '
+            VALUES (?,?,?,?,?,?,?,?)''', (name, album_id, media_type_id, genre_id, composer, milliseconds, bytess, price))
         db.commit()
     except sqlite3.IntegrityError as error:
 
@@ -152,12 +152,10 @@ def post_track():
     
 
     db_track = db.execute(
-        'SELECT * FROM tracks '
-        'WHERE tracks.albumid = :albumid AND tracks.MediaTypeId = :MediaTypeId AND tracks.genreid = :genreid AND tracks.name = :name AND tracks.composer = :composer AND tracks.milliseconds = :milliseconds AND tracks.bytes = :bytes AND tracks.UnitPrice = :UnitPrice;',
-        new_track
-    ).fetchone()
+        '''SELECT * FROM tracks 
+        WHERE trackid = (SELECT MAX(trackid) FROM tracks)''')
 
-    return jsonify(dict(db_track))
+    return jsonify(dict(db_track)), 200
 
 
 
