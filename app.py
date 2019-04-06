@@ -103,7 +103,27 @@ def get_tracks():
         return jsonify(data2)
 
 def post_track():
+    json_data = request.get_json()
     db = get_db()
+
+    if json_data == None:
+        db.close()
+        return 400
+    else:
+        album_id = request.form['album_id']
+        media_type_id = request.form['media_type_id']
+        genre_id = request.form['genre_id']
+        name = request.form['name']
+        composer = request.form['composer']
+        milliseconds = request.form['milliseconds']
+        bbytes = request.form['bytes']
+        price = request.form['price']
+        db.execute('''INSERT INTO tracks (name, albumid, mediatypeid, genreid, composer, milliseconds, bytes, unitprice)
+                        VALUES (?,?,?,?,?,?,?,?)''',(name, album_id, media_type_id, genre_id, composer, milliseconds, bbytes, price))
+        data = db.execute('''SELECT * FROM tracks
+                                WHERE trackid = (SELECT MAX(trackid)  FROM tracks)''')
+        return jsonify(data), 200
+    """ db = get_db()
     new_track = request.get_json()
 
     album_id = request.form['AlbumId']
@@ -149,7 +169,7 @@ def post_track():
             '''SELECT * FROM tracks 
             WHERE trackid = (SELECT MAX(trackid) FROM tracks)''').fetchone()
 
-        return jsonify(db_track), 200
+        return jsonify(db_track), 200 """
 
 
 
