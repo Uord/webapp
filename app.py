@@ -34,7 +34,7 @@ def tracks_list():
     data2 = []
     for x in data:
         data2.append(x[0])
-    return jsonify(data2)
+    return jsonify(data2[2:])
 
 
 if __name__ == '__main__':
