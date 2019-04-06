@@ -105,14 +105,14 @@ def get_tracks():
 def post_track():
     db = get_db()
     new_track = request.get_json()
-    album_id = new_track.get('AlbumID')
-    media_type_id = new_track.get('MediaTypeId')
-    genre_id = new_track.get('GenreId')
-    name = new_track.get('Name')
-    composer = new_track.get('Composer')
-    milliseconds = new_track.get('Milliseconds')
-    bytess = new_track.get('Bytes')
-    price = new_track.get('UnitPrice')
+    album_id = request.form['album_id']
+    media_type_id = request.form['media_type_id']
+    genre_id = request.form['genre_id']
+    name = request.form['name']
+    composer = request.form['composer']
+    milliseconds = request.form['milliseconds']
+    bytess = request.form['bytes']
+    price = request.form['price']
 
     if album_id is None:
         raise InvalidUsage(f'missing "AlbumID" in request data')
