@@ -30,7 +30,10 @@ def tracks_list():
     db = get_db()
     data = db.execute('SELECT name FROM tracks').fetchall()
     data = sorted(data)
-    return json.dumps(data).encode('utf8')
+    data2 = []
+    for x in data:
+        data2.append(x[0])
+    return json.dumps(data2).encode('utf8')
 
 if __name__ == '__main__':
         app.run(debug=False)
