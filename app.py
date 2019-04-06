@@ -106,7 +106,7 @@ def post_track():
     db = get_db()
     new_track = request.get_json()
 
-    album_id = request.form['AlbumID']
+    album_id = request.form['AlbumId']
     media_type_id = request.form['MediaTypeId']
     genre_id = request.form['GenreId']
     name = request.form['Name']
