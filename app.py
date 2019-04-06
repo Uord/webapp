@@ -8,7 +8,6 @@ from flask import (
 )
 import sqlite3
 import json
-import matplotlib
 
 app = Flask(__name__)
 
