@@ -1,5 +1,12 @@
+from flask import (
+    Flask,
+    g,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
 import sqlite3
-from flask import g, Flask
 import json
 import matplotlib
 
@@ -22,12 +29,9 @@ def close_connection(exception):
 @app.route('/tracks')
 def tracks_list():
     db = get_db()
-    cursor = db.cursor()
-    data = cursor.execute('SELECT name FROM tracks').fetchall()
-    cursor.close()
+    data = db.execute('SELECT name FROM tracks').fetchall()
     data = sorted(data)
-    data = list(matplotlib.cbook.flatten(data))
-    return json.dumps(data).encode('utf8')
+    return render_template('tracks.html', tracks=data)
 
 if __name__ == '__main__':
         app.run(debug=False)
