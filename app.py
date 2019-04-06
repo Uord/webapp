@@ -103,26 +103,41 @@ def get_tracks():
         return jsonify(data2)
 
 def post_track():
-    json_data = request.get_json()
     db = get_db()
+    new_track = request.get_json()
 
-    if json_data == None:
-        db.close()
-        return 400
-    else:
-        album_id = request.form['album_id']
-        media_type_id = request.form['media_type_id']
-        genre_id = request.form['genre_id']
-        name = request.form['name']
-        composer = request.form['composer']
-        milliseconds = request.form['milliseconds']
-        bbytes = request.form['bytes']
-        price = request.form['price']
-        db.execute('''INSERT INTO tracks (name, albumid, mediatypeid, genreid, composer, milliseconds, bytes, unitprice)
-                        VALUES (?,?,?,?,?,?,?,?)''',(name, album_id, media_type_id, genre_id, composer, milliseconds, bbytes, price))
-        data = db.execute('''SELECT * FROM tracks
-                                WHERE trackid = (SELECT MAX(trackid)  FROM tracks)''')
-        return jsonify(data), 200
+    
+    album_id = new_track.get('album_id')
+    media_type_id = new_track.get('media_type_id')
+    genre_id = new_track.get('genre_id')
+    name = new_track.get('name')
+    composer = new_track.get('composer')
+    milliseconds = new_track.get('milliseconds')
+    bytess = new_track.get('bytes')
+    price = new_track.get('price')
+
+    if album_id is None:
+        raise InvalidUsage(f'missing "AlbumID" in request data')
+    if media_type_id is None:
+        raise InvalidUsage(f'missing "MediaTypeId" in request data')
+    if genre_id is None:
+        raise InvalidUsage(f'missing "GenreId" in request data')
+    if name is None:
+        raise InvalidUsage(f'missing "Name" in request data')
+    if composer is None:
+        raise InvalidUsage(f'missing "Composer" in request data')
+    if milliseconds is None:
+        raise InvalidUsage(f'missing "Milliseconds" in request data')
+    if bytess is None:
+        raise InvalidUsage(f'missing "Bytes" in request data')
+    if price is None:
+        raise InvalidUsage(f'missing "UnitPrice" in request data')
+
+    db.execute('''INSERT INTO tracks (name, albumid, mediatypeid, genreid, composer, milliseconds, bytes, unitprice)
+                    VALUES (?,?,?,?,?,?,?,?)''',(name, album_id, media_type_id, genre_id, composer, milliseconds, bytess, price))
+    data = db.execute('''SELECT * FROM tracks
+                            WHERE trackid = (SELECT MAX(trackid)  FROM tracks)''').fetchone()
+    return jsonify(data)
     """ db = get_db()
     new_track = request.get_json()
 
