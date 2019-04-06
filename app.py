@@ -28,12 +28,27 @@ def close_connection(exception):
 
 @app.route('/tracks')
 def tracks_list():
-    db = get_db()
-    data = db.execute('SELECT name FROM tracks ORDER BY name COLLATE NOCASE').fetchall()
-    data2 = []
-    for x in data:
-        data2.append(x[0])
-    return jsonify(data2)
+    if request.args.get('artist'):
+        db = get_db()
+        data = db.execute(
+        'SELECT tracks.name, artists.name AS artist FROM tracks '
+        'JOIN albums ON tracks.albumid = albums.albumid '
+        'JOIN artists ON albums.artistid = artists.artistid '
+        'WHERE artists.name = ? '
+        'ORDER by tracks.name COLLATE NOCASE;',
+        (request.args.get('artist'),)).fetchall()
+        data2 = []
+        for x in data:
+            #data2[x[0]] = x[1]
+            data2.append(x[0])
+        return jsonify(data2)
+    else:
+        db = get_db()
+        data = db.execute('SELECT name FROM tracks ORDER BY name COLLATE NOCASE').fetchall()
+        data2 = []
+        for x in data:
+            data2.append(x[0])
+        return jsonify(data2)
 
 
 
