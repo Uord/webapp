@@ -103,36 +103,36 @@ def get_tracks():
 def post_track():
     db = get_db()
     new_track = request.get_json()
-    album_id = new_track.get('album_id')
-    media_type_id = new_track.get('media_type_id')
-    genre_id = new_track.get('genre_id')
-    name = new_track.get('name')
-    composer = new_track.get('composer')
-    milliseconds = new_track.get('milliseconds')
-    bytess = new_track.get('bytes')
-    price = new_track.get('price')
+    album_id = new_track.get('AlbumID')
+    media_type_id = new_track.get('MediaTypeId')
+    genre_id = new_track.get('GenreId')
+    name = new_track.get('Name')
+    composer = new_track.get('Composer')
+    milliseconds = new_track.get('Milliseconds')
+    bytess = new_track.get('Bytes')
+    price = new_track.get('UnitPrice')
 
     if album_id is None:
-        raise InvalidUsage(f'missing "album_id" in request data')
+        raise InvalidUsage(f'missing "AlbumID" in request data')
     if media_type_id is None:
-        raise InvalidUsage(f'missing "media_type_id" in request data')
+        raise InvalidUsage(f'missing "MediaTypeId" in request data')
     if genre_id is None:
-        raise InvalidUsage(f'missing "genre_id" in request data')
+        raise InvalidUsage(f'missing "GenreId" in request data')
     if name is None:
-        raise InvalidUsage(f'missing "name" in request data')
+        raise InvalidUsage(f'missing "Name" in request data')
     if composer is None:
-        raise InvalidUsage(f'missing "composer" in request data')
+        raise InvalidUsage(f'missing "Composer" in request data')
     if milliseconds is None:
-        raise InvalidUsage(f'missing "milliseconds" in request data')
+        raise InvalidUsage(f'missing "Milliseconds" in request data')
     if bytess is None:
-        raise InvalidUsage(f'missing "bytes" in request data')
+        raise InvalidUsage(f'missing "Bytes" in request data')
     if price is None:
-        raise InvalidUsage(f'missing "price" in request data')
+        raise InvalidUsage(f'missing "UnitPrice" in request data')
     
     try:
         db.execute(
-            'INSERT INTO tracks (album_id, media_type_id,genre_id,name,composer,milliseconds,bytes,price) '
-            'VALUES (:album_id,:media_type_id,:genre_id,:name,:composer, :milliseconds, :bytes, :price);',
+            'INSERT INTO tracks (albumid, MediaTypeId,GenreId,Name,composer,milliseconds,bytes,UnitPrice) '
+            'VALUES (:albumid,:MediaTypeId,:GenreId,:Name,:composer, :milliseconds, :bytes, :UnitPrice);',
             new_track
         )
         db.commit()
@@ -153,7 +153,7 @@ def post_track():
 
     db_track = db.execute(
         'SELECT * FROM tracks '
-        'WHERE tracks.album_id = :album_id AND tracks.media_type_id = :media_type_id AND tracks.genre_id = :genre_id AND tracks.name = :name AND tracks.composer = :composer AND tracks.milliseconds = :milliseconds AND tracks.bytes = :bytes AND tracks.price = :price;',
+        'WHERE tracks.albumid = :albumid AND tracks.MediaTypeId = :MediaTypeId AND tracks.genreid = :genreid AND tracks.name = :name AND tracks.composer = :composer AND tracks.milliseconds = :milliseconds AND tracks.bytes = :bytes AND tracks.UnitPrice = :UnitPrice;',
         new_track
     ).fetchone()
 
