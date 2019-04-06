@@ -105,6 +105,7 @@ def get_tracks():
 def post_track():
     db = get_db()
     new_track = request.get_json()
+
     album_id = request.form['album_id']
     media_type_id = request.form['media_type_id']
     genre_id = request.form['genre_id']
@@ -114,41 +115,34 @@ def post_track():
     bytess = request.form['bytes']
     price = request.form['price']
 
-    if album_id is None:
-        raise InvalidUsage(f'missing "AlbumID" in request data')
-    if media_type_id is None:
-        raise InvalidUsage(f'missing "MediaTypeId" in request data')
-    if genre_id is None:
-        raise InvalidUsage(f'missing "GenreId" in request data')
-    if name is None:
-        raise InvalidUsage(f'missing "Name" in request data')
-    if composer is None:
-        raise InvalidUsage(f'missing "Composer" in request data')
-    if milliseconds is None:
-        raise InvalidUsage(f'missing "Milliseconds" in request data')
-    if bytess is None:
-        raise InvalidUsage(f'missing "Bytes" in request data')
-    if price is None:
-        raise InvalidUsage(f'missing "UnitPrice" in request data')
+    if new_track == None:
+
+        if album_id is None:
+            raise InvalidUsage(f'missing "AlbumID" in request data')
+        if media_type_id is None:
+            raise InvalidUsage(f'missing "MediaTypeId" in request data')
+        if genre_id is None:
+            raise InvalidUsage(f'missing "GenreId" in request data')
+        if name is None:
+            raise InvalidUsage(f'missing "Name" in request data')
+        if composer is None:
+            raise InvalidUsage(f'missing "Composer" in request data')
+        if milliseconds is None:
+            raise InvalidUsage(f'missing "Milliseconds" in request data')
+        if bytess is None:
+            raise InvalidUsage(f'missing "Bytes" in request data')
+        if price is None:
+            raise InvalidUsage(f'missing "UnitPrice" in request data')
     
-    try:
+    else:
         db.execute(
             '''INSERT INTO tracks (name, albumid, mediatypeid, genreid, composer, milliseconds, bytes, unitprice) '
             VALUES (?,?,?,?,?,?,?,?)''', (name, album_id, media_type_id, genre_id, composer, milliseconds, bytess, price))
         db.commit()
-    except sqlite3.IntegrityError as error:
+    
 
         db.rollback()
-        error_reason = error.args[0]
-
-        if error_reason.startswith('UNIQUE constraint failed'):
-            raise InvalidUsage(f'XXX')
-
-        elif error_reason.startswith('FOREIGN KEY constraint failed'):
-            raise InvalidUsage(f'XXXX')
-
-        else:
-            raise error
+    
     
 
     db_track = db.execute(
