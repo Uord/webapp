@@ -151,7 +151,7 @@ def genres():
         'SELECT genres.name, count(tracks.trackid) '
         'FROM genres '
         'LEFT JOIN tracks ON genres.genreid = tracks.genreid '
-        'GROUP BY tracks.name;'
+        'GROUP BY genres.name;'
     ).fetchall()
     return jsonify(dict(genress))
 
