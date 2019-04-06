@@ -29,11 +29,12 @@ def close_connection(exception):
 @app.route('/tracks')
 def tracks_list():
     db = get_db()
-    data = db.execute('SELECT name COLLATE NOCASE FROM tracks ORDER BY name').fetchall()
+    data = db.execute('SELECT name COLLATE NOCASE FROM tracks COLLATE NOCASE ORDER BY name').fetchall()
     data2 = []
     for x in data:
         data2.append(x[0])
     return jsonify(data2)
+
 
 
 if __name__ == '__main__':
