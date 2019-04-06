@@ -26,9 +26,45 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
-@app.route('/tracks')
-def tracks_list():
+class InvalidUsage(Exception):
+    status_code = 400
 
+    def __init__(self, error, status_code=None, payload=None):
+        super().__init__(self)
+        self.error = error
+        if status_code is not None:
+            self.status_code = status_code
+        self.payload = payload
+
+    def to_dict(self):
+        rv = dict(self.payload or ())
+        rv['error'] = self.error
+        return rv
+
+
+@app.errorhandler(InvalidUsage)
+def handle_invalid_usage(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response
+
+@app.route('/tracks', methods = ['GET', 'POST'])
+def tracks_list():
+    if request.method == 'GET':
+        return get_tracks()
+    else:
+        return post_track()
+
+
+class ValidationForm(Form):
+    artist = StringField(validators=[validators.optional()])
+    per_page = IntegerField(validators=[validators.optional(),
+                                        validators.number_range(min=1)])
+    page = IntegerField(validators=[validators.optional(),
+                                    validators.number_range(min=1)])
+
+
+def get_tracks():
     form = ValidationForm(request.args)
 
     if not form.validate():
@@ -64,12 +100,59 @@ def tracks_list():
             data2.append(x[0])
         return jsonify(data2)
 
-class ValidationForm(Form):
-    artist = StringField(validators=[validators.optional()])
-    per_page = IntegerField(validators=[validators.optional(),
-                                        validators.number_range(min=1)])
-    page = IntegerField(validators=[validators.optional(),
-                                    validators.number_range(min=1)])
+def post_track():
+    db = get_db()
+    new_track = request.get_json()
+    album_id = new_track.get('album_id')
+    media_type_id = new_track.get('media_type_id')
+    genre_id = new_track.get('genre_id')
+    name = new_track.get('name')
+    composer = new_track.get('composer')
+    milliseconds = new_track.get('milliseconds')
+    bytess = new_track.get('bytes')
+    price = new_track.get('price')
+
+    if album_id is None:
+        raise InvalidUsage(f'missing "album_id" in request data')
+    if media_type_id is None:
+        raise InvalidUsage(f'missing "media_type_id" in request data')
+    if genre_id is None:
+        raise InvalidUsage(f'missing "genre_id" in request data')
+    if name is None:
+        raise InvalidUsage(f'missing "name" in request data')
+    if composer is None:
+        raise InvalidUsage(f'missing "composer" in request data')
+    if milliseconds is None:
+        raise InvalidUsage(f'missing "milliseconds" in request data')
+    if bytess is None:
+        raise InvalidUsage(f'missing "bytes" in request data')
+    if price is None:
+        raise InvalidUsage(f'missing "price" in request data')
+    
+    try:
+        db.execute(
+            'INSERT INTO tracks (album_id, media_type_id,genre_id,name,composer,milliseconds,bytes,price) '
+            'VALUES (:album_id, :media_type_id,:media_type_id,:genre_id,:name,:composer, :milliseconds, :bytes, :price);',
+            new_track
+        )
+        db.commit()
+    except sqlite3.IntegrityError as error:
+
+        db.rollback()
+        error_reason = error.args[0]
+
+        if error_reason.startswith('UNIQUE constraint failed'):
+            raise InvalidUsage(f'XXX')
+
+        elif error_reason.startswith('FOREIGN KEY constraint failed'):
+            raise InvalidUsage(f'XXXX')
+
+        else:
+            raise error
+    
+
+
+    return 'lol'
 
 
 
