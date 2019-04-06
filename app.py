@@ -144,8 +144,16 @@ def post_track():
     data = db.execute('''SELECT * FROM tracks
                         WHERE trackid = (SELECT MAX(trackid)  FROM tracks)''').fetchone()
     return jsonify(data), 200
-
-
+@app.route('/genres')
+def genres():
+    db = get_db()
+    genress = db.execute(
+        'SELECT genres.name, count(tracks.trackid) '
+        'FROM genres '
+        'LEFT JOIN tracks ON genres.genreid = tracks.genreid '
+        'GROUP BY tracks.name;'
+    ).fetchall()
+    return jsonify(dict(genress))
 
 if __name__ == '__main__':
         app.run(debug=True)
