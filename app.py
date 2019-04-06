@@ -8,7 +8,7 @@ from flask import (
     jsonify
 )
 import sqlite3
-import json
+from wtforms import Form, StringField, validators, IntegerField
 
 app = Flask(__name__)
 
@@ -28,15 +28,29 @@ def close_connection(exception):
 
 @app.route('/tracks')
 def tracks_list():
-    if request.args.get('artist'):
+
+    form = ValidationForm(request.args)
+
+    if not form.validate():
+        return jsonify(error=form.errors)
+
+    per_page = form.data['per_page'] or -1
+    limit = per_page
+
+    page = form.data['page'] or 0
+    page_index = page - 1
+    offset = page_index * per_page
+
+    if form.data['artist']:
         db = get_db()
         data = db.execute(
         'SELECT tracks.name, artists.name AS artist FROM tracks '
         'JOIN albums ON tracks.albumid = albums.albumid '
         'JOIN artists ON albums.artistid = artists.artistid '
         'WHERE artists.name = ? '
-        'ORDER by tracks.name COLLATE NOCASE;',
-        (request.args.get('artist'),)).fetchall()
+        'ORDER by tracks.name COLLATE NOCASE '
+        'LIMIT ? OFFSET ?;',
+        (form.data['artist'], limit, offset)).fetchall()
         data2 = []
         for x in data:
             #data2[x[0]] = x[1]
@@ -44,11 +58,18 @@ def tracks_list():
         return jsonify(data2)
     else:
         db = get_db()
-        data = db.execute('SELECT name FROM tracks ORDER BY name COLLATE NOCASE').fetchall()
+        data = db.execute('SELECT name FROM tracks ORDER BY name COLLATE NOCASE LIMIT  ? OFFSET ?;', (limit, offset)).fetchall()
         data2 = []
         for x in data:
             data2.append(x[0])
         return jsonify(data2)
+
+class ValidationForm(Form):
+    artist = StringField(validators=[validators.optional()])
+    per_page = IntegerField(validators=[validators.optional(),
+                                        validators.number_range(min=1)])
+    page = IntegerField(validators=[validators.optional(),
+                                    validators.number_range(min=1)])
 
 
 

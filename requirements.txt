@@ -8,3 +8,4 @@ Werkzeug==0.14.1
 Flask-BasicAuth
 Flask-Login
 dicttoxml
+wtforms
